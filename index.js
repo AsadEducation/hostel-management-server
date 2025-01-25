@@ -3,7 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors());
@@ -29,16 +29,69 @@ async function run() {
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-        // const dataBase = client.db('Movies-10');
-        // const movieCollection = dataBase.collection('Movie-Collection')
+        const dataBase = client.db('Hostel-Management');
+        const mealCollection = dataBase.collection('meals');
+        const userCollection = dataBase.collection('users');
 
-        const userCollection = client.db('coffeeDB').collection('users');
+        // meal related api 
 
-        app.get('/users', async (req, res) => {
-            const cursor = userCollection.find();
-            const result = await cursor.toArray();
+        //api for getting all meals
+        app.get('/meals', async (req, res) => {
+
+            const result = await mealCollection.find().toArray();
+
             res.send(result);
         })
+
+        // api for getting a specific meal based on id 
+        app.get('/meals/:id', async (req, res) => {
+
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+
+            const result = await mealCollection.findOne(query);
+
+            res.send(result);
+
+        })
+
+        // api for updating reaction count in meal 
+
+        app.patch('/meal/like/:id', async (req, res) => {
+
+            const id = req.params.id;
+
+            const reactionCount = req.body.reactionCount;
+
+            // console.log(req.body);
+
+            const query = { _id: new ObjectId(id) };
+
+            const options = { upsert: true };
+
+            const updateDoc = {
+                $set: {
+                    reactionCount: reactionCount
+                }
+            }
+
+            const result = await mealCollection.updateOne(query, updateDoc, options);
+
+            res.send(result)
+        })
+
+        //users related api
+
+        app.post('/user', async (req, res) => {
+
+            const user = req.body; //console.log(user);
+
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
+
+
 
     } finally {
 
