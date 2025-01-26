@@ -32,6 +32,7 @@ async function run() {
         const dataBase = client.db('Hostel-Management');
         const mealCollection = dataBase.collection('meals');
         const userCollection = dataBase.collection('users');
+        const reviewCollection = dataBase.collection('reviews');
 
         // meal related api 
 
@@ -75,7 +76,6 @@ async function run() {
 
             res.send(result);
         })
-
         // api for getting a specific meal based on id 
         app.get('/meals/:id', async (req, res) => {
 
@@ -88,9 +88,7 @@ async function run() {
             res.send(result);
 
         })
-
         // api for updating reaction count in meal 
-
         app.patch('/meal/like/:id', async (req, res) => {
 
             const id = req.params.id;
@@ -112,6 +110,15 @@ async function run() {
             const result = await mealCollection.updateOne(query, updateDoc, options);
 
             res.send(result)
+        })
+
+        //review related api
+
+        app.post('/review', async (req, res) => {
+            const review = req.body;
+
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
         })
 
         //users related api
