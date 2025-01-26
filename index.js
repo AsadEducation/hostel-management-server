@@ -42,7 +42,7 @@ async function run() {
             // const search = req.query?.search; //console.log(search)
             // const category = req.query?.category; console.log(category)
 
-            const { search, category, min, max } = req.query;
+            const { search, category, min, max } = req.query; console.log(req.query);
 
             // let sortQuery = {};
             // if (sorted == 'true') {
@@ -51,15 +51,15 @@ async function run() {
 
             let searchQuery = {};
 
-            if (search) {
+            if (search && search !== 'undefined') {
                 searchQuery = { name: { $regex: new RegExp(search, 'i') } };
             }
 
-            if (category) {
+            if (category && search !== 'undefined') {
                 searchQuery.category = category;
             }
 
-            if (min || max) {
+            if ((min || max) && (min !== 'undefined' && max !== 'undefined')) {
 
                 searchQuery.price = {};
 
@@ -67,7 +67,9 @@ async function run() {
                 if (max) searchQuery.price.$lte = parseFloat(max);
             }
 
-            const cursor = mealCollection.find(searchQuery).sort();
+            console.log(searchQuery)
+
+            const cursor = mealCollection.find(searchQuery);
 
             const result = await cursor.toArray(); console.log(result);
 
