@@ -43,7 +43,7 @@ async function run() {
             // const search = req.query?.search; //console.log(search)
             // const category = req.query?.category; console.log(category)
 
-            const { search, category, min, max } = req.query; console.log(req.query);
+            const { search, category, min, max } = req.query; //console.log(req.query);
 
             // let sortQuery = {};
             // if (sorted == 'true') {
@@ -68,11 +68,11 @@ async function run() {
                 if (max) searchQuery.price.$lte = parseFloat(max);
             }
 
-            console.log(searchQuery)
+            //console.log(searchQuery)
 
             const cursor = mealCollection.find(searchQuery);
 
-            const result = await cursor.toArray(); console.log(result);
+            const result = await cursor.toArray(); //console.log(result);
 
             res.send(result);
         })
@@ -114,6 +114,21 @@ async function run() {
 
         //review related api
 
+        // api for getting review count from db 
+        app.get('/review-count', async (req, res) => {
+
+            const result = reviewCollection.estimatedDocumentCount();
+            res.send(result);
+
+        })
+        // api for getting all reviews  from db 
+        app.get('/reviews', async (req, res) => {
+
+            const result = await reviewCollection.find().toArray();
+            res.send(result);
+
+        })
+        // api for posting user reviews to db 
         app.post('/review', async (req, res) => {
             const review = req.body;
 
