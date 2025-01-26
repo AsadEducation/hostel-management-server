@@ -117,8 +117,8 @@ async function run() {
         // api for getting review count from db 
         app.get('/review-count', async (req, res) => {
 
-            const result = reviewCollection.estimatedDocumentCount();
-            res.send(result);
+            const reviewCount = await reviewCollection.estimatedDocumentCount();
+            res.send({ reviewCount });
 
         })
         // api for getting all reviews  from db 
@@ -140,10 +140,21 @@ async function run() {
 
         app.post('/user', async (req, res) => {
 
-            const user = req.body; //console.log(user);
+            const user = req.body; // console.log(user);
+
+            const query = { email: user?.email }
+
+            const existingUser = await userCollection.findOne(query);  // console.log('exists', existingUser);
+
+            if (existingUser) {
+                // console.log('returning');
+                return res.send({ message: 'user already exists ', insertedId: null })
+            }
 
             const result = await userCollection.insertOne(user);
-            res.send(result);
+
+            return res.send(result);
+
         })
 
 
