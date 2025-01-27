@@ -118,13 +118,14 @@ async function run() {
             // const result = await reviewCollection.find().toArray();
             // res.send(result);
 
-            const email = req?.query?.email;// console.log(email);
+            const email = req?.query?.email; //console.log(email);
 
             let query = {};
 
             if (email && email !== 'undefined') {
-                query.email = email;
+                query.user_email = email;
             }
+            //console.log(query)
 
             const result = await reviewCollection.find(query).toArray(); //console.log(result)
             res.send(result);
@@ -190,8 +191,8 @@ async function run() {
 
             const user = await userCollection.findOne(query); //console.log(user);
 
-            const isAdmin = user?.role==='admin'; //console.log(isAdmin);
-            res.send({isAdmin})
+            const isAdmin = user?.role === 'admin'; //console.log(isAdmin);
+            res.send({ isAdmin })
 
         })
         // api for updating user role as admin 
