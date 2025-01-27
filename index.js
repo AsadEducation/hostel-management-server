@@ -39,16 +39,7 @@ async function run() {
         //api for getting all meals
         app.get('/meals', async (req, res) => {
 
-            // const sorted = req.query?.sorted;
-            // const search = req.query?.search; //console.log(search)
-            // const category = req.query?.category; console.log(category)
-
             const { search, category, min, max } = req.query; //console.log(req.query);
-
-            // let sortQuery = {};
-            // if (sorted == 'true') {
-            //     sortQuery = { expired_datetime: -1 }  //change expired_datetime 
-            // }
 
             let searchQuery = {};
 
@@ -147,8 +138,35 @@ async function run() {
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
+        //api for updating user review 
+        app.patch('/review/:id', async (req, res) => {
+
+            const reviewText = req.body.reviewText;
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+
+            const updateDoc = {
+                $set: {
+                    reviewText
+                }
+            }
+
+            const result = await reviewCollection.updateOne(query, updateDoc);
+            res.send(result);
+
+        })
+        // api for deleting a review 
+        app.delete('/review/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
+        })
 
         //users related api
+
         // api for getting user
         app.get('/users', async (req, res) => {
 
@@ -163,6 +181,22 @@ async function run() {
             const result = await userCollection.find(query).toArray();// console.log(result)
             res.send(result);
 
+        })
+        // api for updating user role as admin 
+        app.patch('/user/admin/:id', async (req, res) => {
+
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+
+            const updateDoc = {
+                $set: {
+                    role: "Admin"
+                }
+            }
+
+            const result = await userCollection.updateOne(query, updateDoc);
+            res.send(result);
         })
         // api for adding a unique user in db 
         app.post('/user', async (req, res) => {
