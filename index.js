@@ -118,7 +118,7 @@ async function run() {
             // const result = await reviewCollection.find().toArray();
             // res.send(result);
 
-            const email = req?.query?.email; console.log(email);
+            const email = req?.query?.email;// console.log(email);
 
             let query = {};
 
@@ -126,7 +126,7 @@ async function run() {
                 query.email = email;
             }
 
-            const result = await reviewCollection.find(query).toArray(); console.log(result)
+            const result = await reviewCollection.find(query).toArray(); //console.log(result)
             res.send(result);
 
 
@@ -178,8 +178,20 @@ async function run() {
                 query.email = email;
             }
 
-            const result = await userCollection.find(query).toArray();// console.log(result)
+            const result = await userCollection.find(query).toArray(); //console.log(result)
             res.send(result);
+
+        })
+        // api for checking admin or not 
+        app.get('/user/admin/:email', async (req, res) => {
+
+            const email = req?.params?.email;
+            const query = { email };
+
+            const user = await userCollection.findOne(query); //console.log(user);
+
+            const isAdmin = user?.role==='admin'; //console.log(isAdmin);
+            res.send({isAdmin})
 
         })
         // api for updating user role as admin 
