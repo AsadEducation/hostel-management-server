@@ -124,8 +124,20 @@ async function run() {
         // api for getting all reviews  from db 
         app.get('/reviews', async (req, res) => {
 
-            const result = await reviewCollection.find().toArray();
+            // const result = await reviewCollection.find().toArray();
+            // res.send(result);
+
+            const email = req?.query?.email; console.log(email);
+
+            let query = {};
+
+            if (email && email !== 'undefined') {
+                query.email = email;
+            }
+
+            const result = await reviewCollection.find(query).toArray(); console.log(result)
             res.send(result);
+
 
         })
         // api for posting user reviews to db 
@@ -137,7 +149,22 @@ async function run() {
         })
 
         //users related api
+        // api for getting user
+        app.get('/users', async (req, res) => {
 
+            const email = req?.query?.email; //console.log(email);
+
+            let query = {};
+
+            if (email && email !== 'undefined') {
+                query.email = email;
+            }
+
+            const result = await userCollection.find(query).toArray();// console.log(result)
+            res.send(result);
+
+        })
+        // api for adding a unique user in db 
         app.post('/user', async (req, res) => {
 
             const user = req.body; // console.log(user);
