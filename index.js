@@ -6,8 +6,9 @@ const app = express();
 const { MongoClient, ServerApiVersion, ObjectId, serialize } = require('mongodb');
 
 // middleware
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
+app.use(cors({ origin: ['https://hostel-management-32.web.app', 'http://localhost:5173'] }));
 
 
 
@@ -242,15 +243,23 @@ async function run() {
         // api for getting user
         app.get('/users', async (req, res) => {
 
-            const email = req?.query?.email; //console.log(email);
+            const email = req?.query?.email; console.log(req.query);
+            const searchName = req?.query?.searchName;
+            const searchMail = req?.query?.searchMail;
 
             let query = {};
 
             if (email && email !== 'undefined') {
                 query.email = email;
             }
+            if (searchName && searchName !== 'undefined') {
+                query.name = { $regex: new RegExp(searchName, 'i') }
+            }
+            if (searchMail && searchMail !== 'undefined') {
+                query.email = { $regex: new RegExp(searchMail, 'i') }
+            }
 
-            const result = await userCollection.find(query).toArray(); //console.log(result)
+            const result = await userCollection.find(query).toArray(); console.log(result)
             res.send(result);
 
         })
