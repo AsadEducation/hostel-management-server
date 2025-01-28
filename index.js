@@ -79,6 +79,13 @@ async function run() {
             res.send(result);
 
         })
+        // api for adding meal data into db 
+        app.post('/meals', async (req, res) => {
+
+            const mealItem = req.body; //console.log(mealItem);
+            const result = await mealCollection.insertOne(mealItem);
+            res.send(result);
+        })
         // api for updating reaction count in meal 
         app.patch('/meal/like/:id', async (req, res) => {
 
