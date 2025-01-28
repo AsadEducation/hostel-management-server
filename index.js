@@ -86,6 +86,47 @@ async function run() {
             const result = await mealCollection.insertOne(mealItem);
             res.send(result);
         })
+        //api for updating single meal
+        app.patch('/meal/:id', async (req, res) => {
+
+            const mealItem = req.body;
+
+            const {
+                name,
+                details,
+                image: display_url,
+                category,
+                price,
+                mealType,
+                distributorName,
+                distributorEmail,
+                ingredients,
+                postTime,
+            } = mealItem
+
+            const id = req.params.id;
+
+            const query = { _id: new ObjectId(id) }
+
+            const updateDoc = {
+                $set: {
+                    name,
+                    details,
+                    image: display_url,
+                    category,
+                    price,
+                    mealType,
+                    distributorName,
+                    distributorEmail,
+                    ingredients,
+                    postTime,
+                }
+            }
+
+            const result = await mealCollection.updateOne(query, updateDoc);
+            res.send(result);
+
+        })
         // api for updating reaction count in meal 
         app.patch('/meal/like/:id', async (req, res) => {
 
