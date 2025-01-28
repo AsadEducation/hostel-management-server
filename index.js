@@ -39,10 +39,20 @@ async function run() {
         //api for getting all meals
         app.get('/meals', async (req, res) => {
 
-            const { search, category, min, max } = req.query; //console.log(req.query);
+            const { search, category, min, max, sortByLikes, sortByReviewCount } = req.query; console.log(req.query);
 
             let searchQuery = {};
+            let sortQuery = {};
 
+            // sort queries 
+
+            if (sortByLikes == 'true') {
+                sortQuery = { reactionCount: -1 }
+            }
+            if (sortByReviewCount == 'true') {
+                sortQuery = { reviews_count: -1 }
+            }
+            //search queries
             if (search && search !== 'undefined') {
                 searchQuery = { name: { $regex: new RegExp(search, 'i') } };
             }
@@ -61,7 +71,7 @@ async function run() {
 
             //console.log(searchQuery)
 
-            const cursor = mealCollection.find(searchQuery);
+            const cursor = mealCollection.find(searchQuery).sort(sortQuery);
 
             const result = await cursor.toArray(); //console.log(result);
 
