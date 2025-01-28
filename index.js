@@ -102,6 +102,19 @@ async function run() {
 
             res.send(result)
         })
+        //api for deleting single meal
+        app.delete('/meal/:id', async (req, res) => {
+
+            const id = req.params.id;// console.log(id);
+
+            const query = { _id: new ObjectId(id) }
+
+            const result = await mealCollection.deleteOne(query); //console.log(result);
+
+            res.send(result);
+
+        })
+
 
         //review related api
 
