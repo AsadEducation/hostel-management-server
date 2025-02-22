@@ -9,7 +9,7 @@ const { MongoClient, ServerApiVersion, ObjectId, serialize } = require('mongodb'
 // middleware
 app.use(cors());
 app.use(express.json());
-app.use(cors({ origin: ['https://hostel-management-32.web.app', 'http://localhost:5173'] }));
+app.use(cors({ origin: ['https://hostel-management-32.web.app', 'http://localhost:5173', 'https://hostel-management-32.vercel.app'] }));
 const stripe = require('stripe')(process.env.STRIPE_SECRET)
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ueh5c.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -300,7 +300,7 @@ async function run() {
         //users related api
 
         // api for getting user
-        app.get('/users', verifyToken, async (req, res) => {
+        app.get('/users', async (req, res) => {
 
             const email = req?.query?.email; console.log(req.query);
             const searchName = req?.query?.searchName;
